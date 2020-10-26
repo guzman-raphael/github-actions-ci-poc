@@ -6,7 +6,7 @@ x-net: &net
 services:
   app:
     <<: *net
-    image: datajoint/djtest:py3.8-alpine
+    image: datajoint/djtest:py${PY_VERSION}-${DISTRO}
     user: ${UID}:anaconda
     command:
       - sh
