@@ -37,6 +37,7 @@ jobs:
           docker-compose run app flake8 calculator --count --select=E9,F63,F7,F82 --show-source --statistics
       - name: Run primary tests
         run: |
+          env
           docker-compose up --build --exit-code-from app
       - name: Run style tests
         run: |
