@@ -1,0 +1,20 @@
+# docker-compose up --build --exit-code-from app
+version: "2.4"
+x-net: &net
+  networks:
+      - main
+services:
+  app:
+    <<: *net
+    image: datajoint/djtest:py3.8-alpine
+    user: 1000:anaconda
+    command:
+      - sh
+      - -c
+      - |-
+        pip install . pytest pytest-cov
+        pytest --cov=calculator /main/tests
+    volumes:
+      - .:/main
+networks:
+  main:
