@@ -31,3 +31,9 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      - name: Run tests
+        run: |
+          docker ps -a
+          docker version
+          docker-compose version
+          docker-compose up --build --exit-code-from app
