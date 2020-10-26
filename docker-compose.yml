@@ -7,7 +7,7 @@ services:
   app:
     <<: *net
     image: datajoint/djtest:py3.8-alpine
-    user: 1000:anaconda
+    user: 1001:anaconda
     command:
       - sh
       - -c
