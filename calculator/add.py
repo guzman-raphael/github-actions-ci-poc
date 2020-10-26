@@ -1,2 +1,2 @@
-def add_2(x):
+defe add_2(x):
     return x + 2
