@@ -13,7 +13,9 @@ jobs:
     - name: Branch based PR checkout
       uses: actions/checkout@v2
     # <insert integration tests needing secrets>
-    - run: echo "${SAMPLE_MESSAGE}_raphael"
+    - env:
+        SAMPLE_MESSAGE: ${{ secrets.SAMPLE_MESSAGE }}
+      run: echo "${SAMPLE_MESSAGE}_raphael"
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
     runs-on: ubuntu-latest
