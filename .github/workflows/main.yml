@@ -1,77 +1,77 @@
-# This is a basic workflow to help you get started with Actions 
+# # This is a basic workflow to help you get started with Actions 
 
-name: CI
+# name: CI
 
-# Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the main branch
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-    types:
-      - labeled
+# # Controls when the action will run. Triggers the workflow on push or pull request
+# # events but only for the main branch
+# on:
+#   push:
+#     branches: [ main ]
+#   pull_request:
+#     branches: [ main ]
+#     types:
+#       - labeled
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-jobs:
-  CI:
-    # The type of runner that the job will run on
-    if: github.event_name == 'push' || github.event.label.name == 'runtest'
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        py_version: ["3.8", "3.7", "3.6"]
-        distro: ["alpine", "debian"]
-    env:
-      UID: "1001"
-      PY_VERSION: ${{ matrix.py_version }}
-      DISTRO: ${{ matrix.distro }}
-    # Steps represent a sequence of tasks that will be executed as part of the job
-    steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+# # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+# jobs:
+#   CI:
+#     # The type of runner that the job will run on
+#     if: github.event_name == 'push' || github.event.label.name == 'runtest'
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         py_version: ["3.8", "3.7", "3.6"]
+#         distro: ["alpine", "debian"]
+#     env:
+#       UID: "1001"
+#       PY_VERSION: ${{ matrix.py_version }}
+#       DISTRO: ${{ matrix.distro }}
+#     # Steps represent a sequence of tasks that will be executed as part of the job
+#     steps:
+#       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#       - uses: actions/checkout@v2
 
-      # Runs a set of commands using the runners shell
-      - name: Run syntax tests
-        run: |
-          docker-compose run app flake8 calculator --count --select=E9,F63,F7,F82 --show-source --statistics
-      - name: Run primary tests
-        run: |
-          env
-          docker-compose up --build --exit-code-from app
-      - name: Run style tests
-        run: |
-          docker-compose run app flake8 --ignore=E121,E123,E126,E226,E24,E704,W503,W504,E722,F401,W605 calculator --count --max-complexity=62 --max-line-length=127 --statistics
-  # https://github.com/marketplace/actions/changelog-reader
-  # CD:
-  #   # The type of runner that the job will run on
-  #   if: github.event_name == 'push'
-  #   runs-on: ubuntu-latest
-  #   # Steps represent a sequence of tasks that will be executed as part of the job
-  #   steps:
-  #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-  #     - uses: actions/checkout@v2
-  #     - name: Build project # This would actually build your project, using zip for an example artifact
-  #       run: |
-  #         zip --junk-paths my-artifact README.md
-  #     - name: Create Release
-  #       id: create_release
-  #       uses: actions/create-release@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         tag_name: ${{ github.ref }}
-  #         release_name: Release ${{ github.ref }}
-  #         draft: false
-  #         prerelease: false
-  #     - name: Upload Release Asset
-  #       id: upload-release-asset 
-  #       uses: actions/upload-release-asset@v1
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #       with:
-  #         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
-  #         asset_path: ./my-artifact.zip
-  #         asset_name: my-artifact.zip
-  #         asset_content_type: application/zip
+#       # Runs a set of commands using the runners shell
+#       - name: Run syntax tests
+#         run: |
+#           docker-compose run app flake8 calculator --count --select=E9,F63,F7,F82 --show-source --statistics
+#       - name: Run primary tests
+#         run: |
+#           env
+#           docker-compose up --build --exit-code-from app
+#       - name: Run style tests
+#         run: |
+#           docker-compose run app flake8 --ignore=E121,E123,E126,E226,E24,E704,W503,W504,E722,F401,W605 calculator --count --max-complexity=62 --max-line-length=127 --statistics
+#   # https://github.com/marketplace/actions/changelog-reader
+#   # CD:
+#   #   # The type of runner that the job will run on
+#   #   if: github.event_name == 'push'
+#   #   runs-on: ubuntu-latest
+#   #   # Steps represent a sequence of tasks that will be executed as part of the job
+#   #   steps:
+#   #     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+#   #     - uses: actions/checkout@v2
+#   #     - name: Build project # This would actually build your project, using zip for an example artifact
+#   #       run: |
+#   #         zip --junk-paths my-artifact README.md
+#   #     - name: Create Release
+#   #       id: create_release
+#   #       uses: actions/create-release@v1
+#   #       env:
+#   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   #       with:
+#   #         tag_name: ${{ github.ref }}
+#   #         release_name: Release ${{ github.ref }}
+#   #         draft: false
+#   #         prerelease: false
+#   #     - name: Upload Release Asset
+#   #       id: upload-release-asset 
+#   #       uses: actions/upload-release-asset@v1
+#   #       env:
+#   #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   #       with:
+#   #         upload_url: ${{ steps.create_release.outputs.upload_url }} # This pulls from the CREATE RELEASE step above, referencing it's ID to get its outputs object, which include a `upload_url`. See this blog post for more info: https://jasonet.co/posts/new-features-of-github-actions/#passing-data-to-future-steps 
+#   #         asset_path: ./my-artifact.zip
+#   #         asset_name: my-artifact.zip
+#   #         asset_content_type: application/zip
  
