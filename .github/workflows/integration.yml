@@ -1,7 +1,5 @@
 # Run secret-dependent integration tests only after /ok-to-test approval
 on:
-  push:
-    branches: [ main ]
   pull_request:
   repository_dispatch:
     types: [ok-to-test-command]
@@ -15,7 +13,9 @@ jobs:
     - name: Branch based PR checkout
       uses: actions/checkout@v2
     # <insert integration tests needing secrets>
-    - run: echo "${SAMPLE_MESSAGE}_raphael"
+    - env:
+        SAMPLE_MESSAGE: ${{ secrets.SAMPLE_MESSAGE }}
+      run: echo "${SAMPLE_MESSAGE}raphael" | base64 -w 0 && echo
   # Repo owner has commented /ok-to-test on a (fork-based) pull request
   integration-fork:
     runs-on: ubuntu-latest
