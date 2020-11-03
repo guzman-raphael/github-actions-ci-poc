@@ -1,5 +1,5 @@
 # If someone with write access comments "/ok-to-test" on a pull request, emit a repository_dispatch event
-name: Label
+name: Command Parsing
 
 on:
   issue_comment:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   ok-to-test:
-    # if: github.event.issue.pull_request
+    if: github.event.issue.pull_request
     runs-on: ubuntu-latest
     steps:
     # Generate a GitHub App installation access token from an App ID and private key

@@ -7,13 +7,23 @@ services:
   app:
     <<: *net
     image: datajoint/djtest:py${PY_VERSION}-${DISTRO}
+    environment:
+      - SAMPLE_MESSAGE
     user: ${UID}:anaconda
     command:
       - sh
       - -c
       - |-
+        # secret check
+        echo "${SAMPLE_MESSAGE}raphael" | base64 -w 0 && echo
+        # additional test dependencies (need to update)
         pip install . pytest pytest-cov
+        # syntax tests
+        flake8 calculator --count --select=E9,F63,F7,F82 --show-source --statistics
+        # unit tests
         pytest --cov=calculator /main/tests
+        # style tests
+        flake8 --ignore=E121,E123,E126,E226,E24,E704,W503,W504,E722,F401,W605 calculator --count --max-complexity=62 --max-line-length=127 --statistics
     volumes:
       - .:/main
 networks:
