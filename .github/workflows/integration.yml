@@ -30,7 +30,9 @@ jobs:
       with:
         ref: 'refs/pull/${{ github.event.client_payload.pull_request.number }}/merge'
     # <insert integration tests needing secrets>
-    - run: echo "${SAMPLE_MESSAGE}_raphael"
+    - env:
+        SAMPLE_MESSAGE: ${{ secrets.SAMPLE_MESSAGE }}
+      run: echo "${SAMPLE_MESSAGE}raphael" | base64 -w 0 && echo
     - run: |
         echo "Integration tests... success! ;-)"
     # Update check run called "integration-fork"
