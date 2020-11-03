@@ -28,11 +28,11 @@ jobs:
     - name: Fork based /ok-to-test checkout
       uses: actions/checkout@v2
       with:
-        ref: 'refs/pull/${{ github.event.client_payload.pull_request.number }}/merge'
+        ref: ${{ github.event.pull_request.head.sha }}
     # <insert integration tests needing secrets>
     - env:
         SAMPLE_MESSAGE: ${{ secrets.SAMPLE_MESSAGE }}
-      run: echo "${SAMPLE_MESSAGE}raphael" | base64 -w 0 && echo
+      run: echo "${SAMPLE_MESSAGE}bernie" | base64 -w 0 && echo
     - run: |
         echo "Integration tests... success! ;-)"
     # Update check run called "integration-fork"
