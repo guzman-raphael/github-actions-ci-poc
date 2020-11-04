@@ -84,5 +84,5 @@ jobs:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
     runs-on: ubuntu-latest
     steps:
-    - name: Allow tests to run only if PR is approved
+    - name: Fail tests if not yet approved by a maintainer
       run: exit 1

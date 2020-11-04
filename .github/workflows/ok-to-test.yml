@@ -20,11 +20,20 @@ jobs:
       with:
         app_id: ${{ secrets.APP_ID }}
         private_key: ${{ secrets.PRIVATE_KEY }}
-
+    - name: Determine event type suffix
+      id: get_sha
+      env:
+        COMMENT: ${{ github.event.comment.body }}
+      run: |
+        printf "$COMMENT"
+        SHA=$(printf "$COMMENT" | grep -o "^/ok-to-test sha=.*$" | awk -F= '{print $2}')
+        echo "$SHA"
+        echo "::set-output name=sha::$SHA"
     - name: Slash Command Dispatch
       uses: peter-evans/slash-command-dispatch@v1
       env:
         TOKEN: ${{ steps.generate_token.outputs.token }}
+        SHA: ${{ steps.get_sha.outputs.sha }}
       with:
         token: ${{ env.TOKEN }} # GitHub App installation access token
         # token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # PAT or OAuth token will also work
@@ -33,4 +42,4 @@ jobs:
         commands: ok-to-test
         named-args: true
         permission: write
-        event-type-suffix: ${{format('-{0}', github.event.issue.pull_request.head.sha)}}
+        event-type-suffix: ${{format('-{0}', env.SHA)}}
