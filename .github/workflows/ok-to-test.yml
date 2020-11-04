@@ -25,9 +25,7 @@ jobs:
       env:
         COMMENT: ${{ github.event.comment.body }}
       run: |
-        printf "$COMMENT"
         SHA=$(printf "$COMMENT" | grep -o "^/ok-to-test sha=.*$" | awk -F= '{print $2}')
-        echo "$SHA"
         echo "::set-output name=sha::$SHA"
     - name: Slash Command Dispatch
       uses: peter-evans/slash-command-dispatch@v1
