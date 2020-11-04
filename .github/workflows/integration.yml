@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ main, dev ]
   repository_dispatch:
-    types: [ok-to-test-command]
+    types: [ok-to-test-*]
 name: Primary Tests
 jobs:
   # Branch-based pull request
