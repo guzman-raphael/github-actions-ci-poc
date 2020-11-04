@@ -58,6 +58,8 @@ jobs:
       env:
         number: ${{ github.event.client_payload.pull_request.number }}
         job: ${{ github.job }}
+        # GITHUB_RUN_ID
+        run_id: ${{ github.run_id }}
         # Conveniently, job.status maps to https://developer.github.com/v3/checks/runs/#update-a-check-run
         conclusion: ${{ job.status }} 
       with:
@@ -72,22 +74,21 @@ jobs:
             ...context.repo,
             ref
           });
-          console.log(`https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`);
+          console.log(`https://github.com/${context.repo.owner}/${context.repo.repo}/runs/${process.env.run_id}`);
           const check1 = checks.check_runs.filter(c => c.name === process.env.job);
           const { data: result1 } = await github.checks.update({
             ...context.repo,
             check_run_id: check1[0].id,
             status: 'completed',
             conclusion: process.env.conclusion,
-            details_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`
+            details_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/runs/${process.env.run_id}`
           });
 
           const check2 = checks.check_runs.filter(c => c.name === "untrusted");
           const { data: result2 } = await github.checks.update({
             ...context.repo,
             check_run_id: check2[0].id,
-            status: 'completed',
-            conclusion: "skipped"
+            conclusion: 'skipped'
           });
           return result1;
 
