@@ -72,14 +72,24 @@ jobs:
             ...context.repo,
             ref
           });
-          const check = checks.check_runs.filter(c => c.name === process.env.job);
-          const { data: result } = await github.checks.update({
+          console.log(`https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`);
+          const check1 = checks.check_runs.filter(c => c.name === process.env.job);
+          const { data: result1 } = await github.checks.update({
             ...context.repo,
-            check_run_id: check[0].id,
+            check_run_id: check1[0].id,
             status: 'completed',
-            conclusion: process.env.conclusion
+            conclusion: process.env.conclusion,
+            details_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.GITHUB_RUN_ID}`
           });
-          return result;
+
+          const check2 = checks.check_runs.filter(c => c.name === "untrusted");
+          const { data: result2 } = await github.checks.update({
+            ...context.repo,
+            check_run_id: check2[0].id,
+            status: 'completed',
+            conclusion: "skipped"
+          });
+          return result1;
 
   untrusted:
     if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository
