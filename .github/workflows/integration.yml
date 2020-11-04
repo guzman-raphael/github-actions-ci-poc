@@ -74,21 +74,28 @@ jobs:
             ...context.repo,
             ref
           });
-          console.log(`https://github.com/${context.repo.owner}/${context.repo.repo}/runs/${process.env.run_id}`);
+
+          const {data: {jobs: jobs}} = await github.actions.listJobsForWorkflowRun({
+            ...context.repo,
+            run_id: process.env.run_id
+          });
+
+          console.log(`https://github.com/${context.repo.owner}/${context.repo.repo}/runs/${jobs[0].id}`);
           const check1 = checks.check_runs.filter(c => c.name === process.env.job);
           const { data: result1 } = await github.checks.update({
             ...context.repo,
             check_run_id: check1[0].id,
             status: 'completed',
             conclusion: process.env.conclusion,
-            details_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/runs/${process.env.run_id}`
+            details_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/runs/${jobs[0].id}`
           });
 
           const check2 = checks.check_runs.filter(c => c.name === "untrusted");
           const { data: result2 } = await github.checks.update({
             ...context.repo,
             check_run_id: check2[0].id,
-            conclusion: 'skipped'
+            status: 'completed',
+            conclusion: 'success'
           });
           return result1;
 
