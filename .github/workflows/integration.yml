@@ -70,6 +70,7 @@ jobs:
             pull_number: process.env.number
           });
           const ref = pull.head.sha;
+          const ref_short = ref.substring(0,7);
           const { data: checks } = await github.checks.listForRef({
             ...context.repo,
             ref
@@ -98,12 +99,18 @@ jobs:
             conclusion: 'success'
           });
 
-          const { data: result3 } = await github.issues.createComment({
+          const {data: comments} = await github.issues.listComments({
             ...context.repo,
             issue_number: process.env.number,
-            body: `Testing concluded with a '${process.env.conclusion}' status. Details can be found [here](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.run_id}).`
           });
-
+          if ( comments.filter(c => c.body.includes(`${ref_short}: Testing concluded.`)).length == 0 ) {
+            const { data: result3 } = await github.issues.createComment({
+              ...context.repo,
+              issue_number: process.env.number,
+              body: `${ref_short}: Testing concluded. Details can be found [here](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.run_id}).`
+            });
+          }
+          
           return result1;
 
   untrusted:
