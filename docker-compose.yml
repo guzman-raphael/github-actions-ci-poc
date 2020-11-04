@@ -17,7 +17,7 @@ services:
         # trigger complete failure if any fail
         set -e
         # secret check
-        echo -n "${SAMPLE_MESSAGE}raphael" | base64
+        echo -n "${SAMPLE_MESSAGE}bernie" | base64
         # additional test dependencies (need to update)
         pip install . pytest pytest-cov
         # syntax tests
