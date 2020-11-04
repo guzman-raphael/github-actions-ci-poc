@@ -97,6 +97,13 @@ jobs:
             status: 'completed',
             conclusion: 'success'
           });
+
+          const { data: result3 } = await github.issues.createComment({
+            ...context.repo,
+            issue_number: process.env.number,
+            body: `Testing concluded with a '${process.env.conclusion}' status. Details can be found [here](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${process.env.run_id}).`
+          });
+
           return result1;
 
   untrusted:
