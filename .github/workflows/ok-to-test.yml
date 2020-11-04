@@ -33,3 +33,4 @@ jobs:
         commands: ok-to-test
         named-args: true
         permission: write
+        event-type-suffix: ${{format('-{0}', github.event.issue.pull_request.head.sha)}}
